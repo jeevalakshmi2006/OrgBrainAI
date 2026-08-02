@@ -1,0 +1,55 @@
+# Local development stack. Runs backend + frontend together.
+# ChromaDB is embedded inside the backend (no separate service needed).
+# Postgres and Neo4j are commented below - uncomment if you want to run
+# them locally instead of SQLite / skipping the graph layer.
+
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - chroma_data:/app/chroma_data
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+  # Optional local Postgres (instead of SQLite / a cloud provider like Neon)
+  # postgres:
+  #   image: postgres:16
+  #   environment:
+  #     POSTGRES_DB: orgbrain
+  #     POSTGRES_USER: orgbrain
+  #     POSTGRES_PASSWORD: orgbrain
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+
+  # Optional local Neo4j (instead of Neo4j AuraDB Free)
+  # neo4j:
+  #   image: neo4j:5
+  #   environment:
+  #     NEO4J_AUTH: neo4j/orgbrain123
+  #   ports:
+  #     - "7474:7474"
+  #     - "7687:7687"
+  #   volumes:
+  #     - neo4j_data:/data
+
+volumes:
+  chroma_data:
+  # pg_data:
+  # neo4j_data:
