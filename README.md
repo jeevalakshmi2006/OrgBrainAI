@@ -1,4 +1,4 @@
-# OrgBrain AI — Complete Setup Guide (v2)
+# OrgBrain AI — Complete Setup Guide 
 
 A working, tested, end-to-end implementation: FastAPI backend, Next.js frontend, JWT auth
 with a simple 2-role model, LLM-driven adaptive interviews with speech-to-text, ChromaDB
